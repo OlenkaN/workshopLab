@@ -17,6 +17,8 @@ public class User {
     @Id
     @GeneratedValue
     private Long id;
+    @Column(name = "count")
+    private Long count;
 
     @Column(name = "name")
     private String name;
@@ -30,6 +32,8 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @ManyToOne
+    private Role role;
 
 
 }

@@ -6,23 +6,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "wallet")
+@Table(name = "prices")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Wallet {
+public class Prices {
     @Id
     @GeneratedValue
     private Long id;
 
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "balance")
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "price")
     private Double price;
-    @ManyToOne
-    private  User user;
-
 }
