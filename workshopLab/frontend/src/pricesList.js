@@ -59,10 +59,10 @@ class priceList extends Component {
                     <Table className="mt-4">
                         <thead>
                         <tr>
-                            <th width="23%">Name</th>
+                            <th width="31%">Name</th>
                             <th width="15%">Price</th>
                             <th width="30%">Description</th>
-                            <th width="31%">Actions</th>
+                            <th width="23%">Actions</th>
                         </tr>
                         </thead>
                         <tbody>

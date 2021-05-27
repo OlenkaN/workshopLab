@@ -52,6 +52,7 @@ public class PricesController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteClient(@PathVariable Long id) {
+        pricesRepository.findById(id).orElseThrow();
         pricesRepository.deleteById(id);
         return ResponseEntity.ok().build();
     }
