@@ -9,51 +9,54 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.List;
 
 @RestController
+@RequestMapping("/prices")
 public class PricesController {
     @Autowired
     PricesRepository pricesRepository;
 
-    @GetMapping("/prices")
-    public Iterable<Prices> viewTasksPage(Model model) {
-        Iterable<Prices> price = pricesRepository.findAll();
-        model.addAttribute("prices", price);
-        ;
-        return price;
+    @GetMapping
+    public List<Prices> getClients() {
+        return pricesRepository.findAll();
     }
 
-    @PostMapping("/prices/add")
-    public ResponseEntity<Prices> addPrice(@RequestBody @Valid PriceRequest priceRequest) {
+    @GetMapping("/{id}")
+    public Prices getPrice(@PathVariable Long id) {
+        return pricesRepository.findById(id).orElseThrow(RuntimeException::new);
+    }
 
+    @PostMapping
+    public ResponseEntity createPrice(@RequestBody @Valid PriceRequest priceRequest) throws URISyntaxException {
         Prices prices = new Prices();
         prices.setName(priceRequest.getName());
         prices.setPrice(priceRequest.getPrice());
         prices.setDescription(priceRequest.getDescription());
-        pricesRepository.save(prices);
-        return ResponseEntity.ok(prices);
-
-
+        Prices savedPrice = pricesRepository.save(prices);
+        return ResponseEntity.created(new URI("/clients/" + savedPrice.getId())).body(savedPrice);
     }
 
-    @PostMapping("/prices/update/{id}")
-    public ResponseEntity<Prices> updatePrice(@RequestBody @Valid PriceRequest priceRequest, @PathVariable(value = "id") long id) {
-        Prices prices = pricesRepository.findById(id).orElseThrow();
+    @PutMapping("/{id}")
+    public ResponseEntity updatePrice(@PathVariable Long id,@RequestBody @Valid PriceRequest priceRequest) {
+        Prices prices = pricesRepository.findById(id).orElseThrow(RuntimeException::new);
         prices.setName(priceRequest.getName());
         prices.setPrice(priceRequest.getPrice());
         prices.setDescription(priceRequest.getDescription());
-        pricesRepository.save(prices);
-        return ResponseEntity.ok(prices);
+        Prices currentPrice= pricesRepository.save(prices);
+
+        return ResponseEntity.ok(currentPrice);
     }
 
-    @PostMapping("/prices/delete/{id}")
-    public ResponseEntity<Iterable<Prices>> deletePrice(@PathVariable(value = "id") long id,Model model) {
-
-        Prices prices = pricesRepository.findById(id).orElseThrow();
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteClient(@PathVariable Long id) {
         pricesRepository.deleteById(id);
-        Iterable<Prices> price = pricesRepository.findAll();
-        model.addAttribute("prices", price);
-        return ResponseEntity.ok(price);
-
+        return ResponseEntity.ok().build();
     }
+
+
+
+
 }
